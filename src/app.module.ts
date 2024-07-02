@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Sse } from '@nestjs/common';
 
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -22,6 +22,14 @@ import { ConfigModule } from '@nestjs/config';// variables de entonrno, SE INSTA
         database : process.env.POSTGRES_DATABASE,
         autoLoadEntities : true,
         synchronize : true, //Necesario para que se creen las tablas en la BD si no existen
+        ssl : process.env.POSTGRES_SSL === 'true', //solo en producción
+        extra : { //solo en producción
+          ssl : process.env.POSTGRES_SSL === 'true' 
+          ?{
+            rejectUnauthorized : false
+          }:null
+          
+        }
       }
     ),
     CatsModule,
